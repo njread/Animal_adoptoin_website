@@ -32659,7 +32659,7 @@ function Pet({
   }
 
   return /*#__PURE__*/_react.default.createElement(_router.Link, {
-    to: `./details/${id}`,
+    to: `/details/${id}`,
     className: "pet"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "image-container"
@@ -33109,7 +33109,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56030" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53673" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
