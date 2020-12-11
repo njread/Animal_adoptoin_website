@@ -32832,7 +32832,43 @@ const SearchParams = () => {
 
 var _default = SearchParams;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","@frontendmasters/pet":"../node_modules/@frontendmasters/pet/index.js","./results.js":"results.js","./useDropdown.js":"useDropdown.js","./ThemeContext":"ThemeContext.js"}],"Carousel.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@frontendmasters/pet":"../node_modules/@frontendmasters/pet/index.js","./results.js":"results.js","./useDropdown.js":"useDropdown.js","./ThemeContext":"ThemeContext.js"}],"Modal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _reactDom = require("react-dom");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+const modalRoot = document.getElementById("modal");
+
+const Modal = ({
+  children
+}) => {
+  const elRef = (0, _react.useRef)(null);
+
+  if (!elRef.current) {
+    elRef.current = document.createElement("div");
+  }
+
+  (0, _react.useEffect)(() => {
+    modalRoot.appendChild(elRef.current);
+    return () => modalRoot.removeChild(elRef.current);
+  }, []);
+  return /*#__PURE__*/(0, _reactDom.createPortal)( /*#__PURE__*/_react.default.createElement("div", null, children), elRef.current);
+};
+
+var _default = Modal;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js"}],"Carousel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32980,6 +33016,10 @@ var _react = _interopRequireDefault(require("react"));
 
 var _pet = _interopRequireDefault(require("@frontendmasters/pet"));
 
+var _router = require("@reach/router");
+
+var _Modal = _interopRequireDefault(require("./Modal.js"));
+
 var _Carousel = _interopRequireDefault(require("./Carousel.js"));
 
 var _Errorboundries = _interopRequireDefault(require("./Errorboundries.js"));
@@ -32993,8 +33033,15 @@ class Details extends _react.default.Component {
     super();
 
     _defineProperty(this, "state", {
-      loading: true
+      loading: true,
+      showModal: false
     });
+
+    _defineProperty(this, "toggleModal", () => this.setState({
+      showModal: !this.state.showModal
+    }));
+
+    _defineProperty(this, "adopt", () => (0, _router.navigate)(this.state.url));
 
     this.state = {
       loading: true
@@ -33006,6 +33053,7 @@ class Details extends _react.default.Component {
       animal
     }) => {
       this.setState({
+        url: animal.url,
         name: animal.name,
         animal: animal.type,
         location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
@@ -33031,14 +33079,23 @@ class Details extends _react.default.Component {
       location,
       description,
       name,
-      media
+      media,
+      showModal
     } = this.state;
     this.state.loading;
     return /*#__PURE__*/_react.default.createElement("div", {
       className: "details"
     }, /*#__PURE__*/_react.default.createElement(_Carousel.default, {
       media: media
-    }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, name), /*#__PURE__*/_react.default.createElement("h2", null, `${animal} — ${breed} — ${location}`), /*#__PURE__*/_react.default.createElement("button", null, "Adopt ", name), /*#__PURE__*/_react.default.createElement("p", null, description)));
+    }), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, name), /*#__PURE__*/_react.default.createElement("h2", null, `${animal} — ${breed} — ${location}`), /*#__PURE__*/_react.default.createElement("button", {
+      onClick: this.toggleModal
+    }, "Adopt ", name), /*#__PURE__*/_react.default.createElement("p", null, description), showModal ? /*#__PURE__*/_react.default.createElement(_Modal.default, null, /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h1", null, "Would you like to adopt ", name, "?"), /*#__PURE__*/_react.default.createElement("div", {
+      className: "buttons"
+    }, /*#__PURE__*/_react.default.createElement("button", {
+      onClick: this.adopt
+    }, "Yes"), /*#__PURE__*/_react.default.createElement("button", {
+      onClick: this.toggleModal
+    }, "No")))) : null));
   }
 
 }
@@ -33046,7 +33103,7 @@ class Details extends _react.default.Component {
 function DetailsWithErrorBoundry(props) {
   return /*#__PURE__*/_react.default.createElement(_Errorboundries.default, null, /*#__PURE__*/_react.default.createElement(Details, props));
 }
-},{"react":"../node_modules/react/index.js","@frontendmasters/pet":"../node_modules/@frontendmasters/pet/index.js","./Carousel.js":"Carousel.js","./Errorboundries.js":"Errorboundries.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@frontendmasters/pet":"../node_modules/@frontendmasters/pet/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","./Modal.js":"Modal.js","./Carousel.js":"Carousel.js","./Errorboundries.js":"Errorboundries.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireWildcard(require("react"));
@@ -33109,7 +33166,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53673" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57896" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
